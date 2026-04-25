@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  email             String    @unique
+  password          String
+  name              String
+  profilePicture    String?
+  bio               String?
+  latitude          Float?    // For geolocation support
+  longitude         Float?    // For geolocation support
+  averageRating     Float     @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  servicesOffered   Service[]     @relation("ServiceOwner")
+  requestsCreated   ServiceRequest[] @relation("Requester")
+  messagesSent      Message[]     @relation("Sender")
+  messagesReceived  Message[]     @relation("Receiver")
+  reviewsGiven      Review[]      @relation("Reviewer")
+  reviewsReceived   Review[]      @relation("Reviewee")
+  payments          Payment[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  ownerId     String
+  owner       User      @relation("ServiceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Future extension: geospatial queries
+  latitude    Float?
+  longitude   Float?
+
+  @@index([ownerId])
+  @@index([createdAt])
+}
+
+model ServiceRequest {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  budget      Float
+  requesterId String
+  requester   User      @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Future extension: geospatial queries
+  latitude    Float?
+  longitude   Float?
+
+  @@index([requesterId])
+  @@index([createdAt])
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  content     String
+  senderId    String
+  receiverId  String
+  sender      User      @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver    User      @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  // Future extension: support for read status, typing indicator
+  isRead      Boolean   @default(false)
+  readAt      DateTime?
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
+}
+
+model Review {
+  id            String    @id @default(cuid())
+  rating        Int       // 1-5 stars
+  comment       String?
+  reviewerId    String
+  reviewer      User      @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewedUserId String
+  reviewedUser  User      @relation("Reviewee", fields: [reviewedUserId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+
+  @@index([reviewerId])
+  @@index([reviewedUserId])
+  @@index([createdAt])
+}
+
+// Future extension: Payments (not implemented in MVP)
+model Payment {
+  id          String    @id @default(cuid())
+  amount      Float
+  currency    String    @default("USD")
+  status      String    @default("pending") // pending, completed, failed
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
