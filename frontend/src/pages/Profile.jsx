@@ -33,17 +33,17 @@ export function Profile() {
   return (
     <div className="container" style={{ maxWidth: '600px', marginTop: '2rem' }}>
       <div className="card">
-        <h2 className="mb-3">{profile.name}</h2>
+        <h2 className="mb-3">{profile.data.name}</h2>
 
         <div className="mb-3">
           <p>
-            <strong>Email:</strong> {profile.email}
+            <strong>Email:</strong> {profile.data.email}
           </p>
           <p>
-            <strong>Rating:</strong> {profile.averageRating.toFixed(1)} / 5
+            <strong>Rating:</strong> {profile.data.averageRating.toFixed(1)}
           </p>
           <p>
-            <strong>Member since:</strong> {new Date(profile.createdAt).toLocaleDateString()}
+            <strong>Member since:</strong> {new Date(profile.data.createdAt).toLocaleDateString()}
           </p>
         </div>
 

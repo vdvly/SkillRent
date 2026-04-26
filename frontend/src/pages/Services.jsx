@@ -40,7 +40,7 @@ export function Services() {
       </div>
 
       <div className="grid grid-3">
-        {services.map((service) => (
+        {services.data.map((service) => (
           <div key={service.id} className="card">
             <h3>{service.title}</h3>
             <p className="text-sm text-muted mb-2">{service.description}</p>

@@ -53,7 +53,8 @@ export function Dashboard() {
           </Link>
         </h2>
         <div className="grid grid-3">
-          {services.map((service) => (
+          {console.log(services.data)}
+          {services.data.map((service) => (
             <div key={service.id} className="card">
               <h3>{service.title}</h3>
               <p className="text-sm text-muted mb-2">{service.description}</p>
@@ -79,7 +80,7 @@ export function Dashboard() {
           </Link>
         </h2>
         <div className="grid grid-3">
-          {requests.map((request) => (
+          {requests.data.map((request) => (
             <div key={request.id} className="card">
               <h3>{request.title}</h3>
               <p className="text-sm text-muted mb-2">{request.description}</p>

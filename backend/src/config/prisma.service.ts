@@ -8,7 +8,11 @@ export class PrismaService extends PrismaClient {
   }
 
   async onModuleInit() {
-    await this.$connect();
+    try {
+      await this.$connect();
+    } catch (error) {
+      console.warn('Prisma connection skipped during startup:', error instanceof Error ? error.message : error);
+    }
   }
 
   async onModuleDestroy() {

@@ -41,7 +41,7 @@ export function Requests() {
       </div>
 
       <div className="grid grid-3">
-        {requests.map((request) => (
+        {requests.data.map((request) => (
           <div key={request.id} className="card">
             <h3>{request.title}</h3>
             <p className="text-sm text-muted mb-2">{request.description}</p>

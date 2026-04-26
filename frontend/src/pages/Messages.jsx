@@ -39,7 +39,7 @@ export function Messages() {
         </div>
       ) : (
         <div>
-          {messages.map((message) => (
+          {messages.data.map((message) => (
             <div key={message.id} className="card mb-2">
               <div style={{
                 display: 'flex',
