@@ -11,13 +11,15 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('token');
-      if (token) {
+      const storedUser = localStorage.getItem('user');
+      
+      if (token && storedUser) {
         try {
-          const response = await authAPI.getProfile();
-          setUser(response.data);
+          setUser(JSON.parse(storedUser));
         } catch (error) {
+          console.error('Failed to parse stored user:', error);
           localStorage.removeItem('token');
-          setUser(null);
+          localStorage.removeItem('user');
         }
       }
       setLoading(false);
@@ -28,18 +30,29 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await authAPI.login(email, password);
-    localStorage.setItem('token', response.data.access_token);
-    setUser(response.data.user);
+    const { accessToken, user: userData } = response.data;
+    
+    localStorage.setItem('token', accessToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    
     return response.data;
   };
 
   const register = async (email, password, name) => {
     const response = await authAPI.register(email, password, name);
+    const { accessToken, user: userData } = response.data;
+    
+    localStorage.setItem('token', accessToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    
     return response.data;
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
