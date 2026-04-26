@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsNumber, Min, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  Min,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
+import { ServiceCategory } from '@prisma/client';
 
 export class CreateServiceDto {
   @IsString()
@@ -12,6 +20,10 @@ export class CreateServiceDto {
   @IsNumber()
   @Min(0)
   price: number;
+
+  @IsEnum(ServiceCategory)
+  @IsOptional()
+  category?: ServiceCategory;
 
   @IsNumber()
   @IsOptional()

@@ -14,6 +14,7 @@ import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { JwtGuard } from '../auth/jwt.guard';
+import { RequestUrgency } from '@prisma/client';
 
 @Controller('requests')
 export class RequestsController {
@@ -23,18 +24,50 @@ export class RequestsController {
   async getAllRequests(
     @Query('skip') skip: string = '0',
     @Query('take') take: string = '20',
+    @Query('urgency') urgency?: RequestUrgency,
+    @Query('minBudget') minBudget?: string,
+    @Query('maxBudget') maxBudget?: string,
+    @Query('search') search?: string,
   ) {
-    return this.requestsService.getAllRequests(parseInt(skip), parseInt(take));
+    return this.requestsService.getAllRequests(
+      parseInt(skip),
+      parseInt(take),
+      urgency,
+      minBudget ? parseFloat(minBudget) : undefined,
+      maxBudget ? parseFloat(maxBudget) : undefined,
+      search,
+    );
+  }
+
+  @Get('urgency/:urgency')
+  async getRequestsByUrgency(
+    @Param('urgency') urgency: RequestUrgency,
+    @Query('skip') skip: string = '0',
+    @Query('take') take: string = '20',
+  ) {
+    return this.requestsService.getRequestsByUrgency(
+      urgency,
+      parseInt(skip),
+      parseInt(take),
+    );
+  }
+
+  @Get('requester/:requesterId')
+  async getRequestsByRequester(
+    @Param('requesterId') requesterId: string,
+    @Query('skip') skip: string = '0',
+    @Query('take') take: string = '10',
+  ) {
+    return this.requestsService.getRequestsByRequester(
+      requesterId,
+      parseInt(skip),
+      parseInt(take),
+    );
   }
 
   @Get(':id')
   async getRequest(@Param('id') id: string) {
     return this.requestsService.getRequestById(id);
-  }
-
-  @Get('requester/:requesterId')
-  async getRequestsByRequester(@Param('requesterId') requesterId: string) {
-    return this.requestsService.getRequestsByRequester(requesterId);
   }
 
   @Post()

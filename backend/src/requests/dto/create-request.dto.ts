@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, IsNumber, Min, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  Min,
+  IsOptional,
+  IsEnum,
+} from 'class-validator';
+import { RequestUrgency } from '@prisma/client';
 
 export class CreateRequestDto {
   @IsString()
@@ -12,6 +20,10 @@ export class CreateRequestDto {
   @IsNumber()
   @Min(0)
   budget: number;
+
+  @IsEnum(RequestUrgency)
+  @IsOptional()
+  urgency?: RequestUrgency;
 
   @IsNumber()
   @IsOptional()

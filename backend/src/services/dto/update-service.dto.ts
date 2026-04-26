@@ -1,4 +1,5 @@
-import { IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsString, IsNumber, IsOptional, Min, IsEnum } from 'class-validator';
+import { ServiceCategory } from '@prisma/client';
 
 export class UpdateServiceDto {
   @IsString()
@@ -13,4 +14,8 @@ export class UpdateServiceDto {
   @Min(0)
   @IsOptional()
   price?: number;
+
+  @IsEnum(ServiceCategory)
+  @IsOptional()
+  category?: ServiceCategory;
 }

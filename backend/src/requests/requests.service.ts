@@ -2,6 +2,7 @@ import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/commo
 import { PrismaService } from '../config/prisma.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { RequestUrgency } from '@prisma/client';
 
 @Injectable()
 export class RequestsService {
@@ -13,11 +14,55 @@ export class RequestsService {
         ...dto,
         requesterId: userId,
       },
+      include: {
+        requester: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+            averageRating: true,
+          },
+        },
+      },
     });
   }
 
-  async getAllRequests(skip: number = 0, take: number = 20) {
+  async getAllRequests(
+    skip: number = 0,
+    take: number = 20,
+    urgency?: RequestUrgency,
+    minBudget?: number,
+    maxBudget?: number,
+    search?: string,
+  ) {
+    const where: any = {};
+
+    // Filter by urgency
+    if (urgency) {
+      where.urgency = urgency;
+    }
+
+    // Filter by budget range
+    if (minBudget !== undefined || maxBudget !== undefined) {
+      where.budget = {};
+      if (minBudget !== undefined) {
+        where.budget.gte = minBudget;
+      }
+      if (maxBudget !== undefined) {
+        where.budget.lte = maxBudget;
+      }
+    }
+
+    // Search by title or description
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
     return this.prisma.serviceRequest.findMany({
+      where,
       skip,
       take,
       include: {
@@ -25,6 +70,7 @@ export class RequestsService {
           select: {
             id: true,
             name: true,
+            profilePicture: true,
             averageRating: true,
           },
         },
@@ -42,8 +88,10 @@ export class RequestsService {
             id: true,
             name: true,
             email: true,
-            averageRating: true,
+            bio: true,
             profilePicture: true,
+            averageRating: true,
+            createdAt: true,
           },
         },
       },
@@ -56,9 +104,48 @@ export class RequestsService {
     return request;
   }
 
-  async getRequestsByRequester(requesterId: string) {
+  async getRequestsByRequester(
+    requesterId: string,
+    skip: number = 0,
+    take: number = 10,
+  ) {
     return this.prisma.serviceRequest.findMany({
       where: { requesterId },
+      skip,
+      take,
+      include: {
+        requester: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+            averageRating: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async getRequestsByUrgency(
+    urgency: RequestUrgency,
+    skip: number = 0,
+    take: number = 20,
+  ) {
+    return this.prisma.serviceRequest.findMany({
+      where: { urgency },
+      skip,
+      take,
+      include: {
+        requester: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+            averageRating: true,
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -77,6 +164,16 @@ export class RequestsService {
     return this.prisma.serviceRequest.update({
       where: { id },
       data: dto,
+      include: {
+        requester: {
+          select: {
+            id: true,
+            name: true,
+            profilePicture: true,
+            averageRating: true,
+          },
+        },
+      },
     });
   }
 
