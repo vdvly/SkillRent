@@ -15,8 +15,8 @@ export function Dashboard() {
           servicesAPI.getAllServices(0, 6),
           requestsAPI.getAllRequests(0, 6),
         ]);
-        setServices(servicesRes);
-        setRequests(requestsRes);
+        setServices(servicesRes.data?.data || servicesRes.data || []);
+        setRequests(requestsRes.data?.data || requestsRes.data || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -53,22 +53,29 @@ export function Dashboard() {
           </Link>
         </h2>
         <div className="grid grid-3">
-          
-          {services.data.map((service) => (
-            <div key={service.id} className="card">
-              <h3>{service.title}</h3>
-              <p className="text-sm text-muted mb-2">{service.description}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-                  ${service.price}
-                </span>
-                <span className="text-sm text-muted">{service.owner.name}</span>
+          {services.length === 0 ? (
+            <p className="text-muted">No services available yet.</p>
+          ) : (
+            services.data.map((service) => (
+              <div key={service.id} className="card">
+                <h3>{service.title}</h3>
+                <p className="text-sm text-muted mb-2">{service.description}</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
+                    ${service.price}
+                  </span>
+                  <span className="text-sm text-muted">{service.owner?.name}</span>
+                </div>
+                <Link
+                  to={`/services/${service.id}`}
+                  className="btn btn-sm btn-primary"
+                  style={{ marginTop: '1rem' }}
+                >
+                  View
+                </Link>
               </div>
-              <Link to={`/services/${service.id}`} className="btn btn-sm btn-primary" style={{ marginTop: '1rem' }}>
-                View
-              </Link>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
 
@@ -80,23 +87,31 @@ export function Dashboard() {
           </Link>
         </h2>
         <div className="grid grid-3">
-          {requests.data.map((request) => (
-            <div key={request.id} className="card">
-              <h3>{request.title}</h3>
-              <p className="text-sm text-muted mb-2">{request.description}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-                  ${request.budget}
-                </span>
-                <span className="text-sm text-muted">
-                  {request.requester.name}
-                </span>
+          {requests.length === 0 ? (
+            <p className="text-muted">No requests available yet.</p>
+          ) : (
+            requests.map((request) => (
+              <div key={request.id} className="card">
+                <h3>{request.title}</h3>
+                <p className="text-sm text-muted mb-2">{request.description}</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
+                    ${request.budget}
+                  </span>
+                  <span className="text-sm text-muted">
+                    {request.requester?.name}
+                  </span>
+                </div>
+                <Link
+                  to={`/requests/${request.id}`}
+                  className="btn btn-sm btn-primary"
+                  style={{ marginTop: '1rem' }}
+                >
+                  View
+                </Link>
               </div>
-              <Link to={`/requests/${request.id}`} className="btn btn-sm btn-primary" style={{ marginTop: '1rem' }}>
-                View
-              </Link>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

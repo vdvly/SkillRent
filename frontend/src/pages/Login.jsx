@@ -16,10 +16,15 @@ export function Login() {
     setLoading(true);
 
     try {
-      await login(email, password);
+      console.log('Attempting login with email:', email);
+      const response = await login(email, password);
+      console.log('Login successful:', response);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+      console.error('Error response:', err.response);
+      const errorMessage = err.response?.data?.message || err.message || 'Login failed';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

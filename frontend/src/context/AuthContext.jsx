@@ -33,9 +33,10 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await authAPI.login(email, password);
-    const { accessToken, user: userData } = response.data;
+    // Response is wrapped in global format: { success, data, message }
+    const { access_token, user: userData } = response.data.data;
     
-    localStorage.setItem('token', accessToken);
+    localStorage.setItem('token', access_token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     
@@ -44,9 +45,10 @@ export function AuthProvider({ children }) {
 
   const register = async (email, password, name) => {
     const response = await authAPI.register(email, password, name);
-    const { accessToken, user: userData } = response.data;
+    // Response is wrapped in global format: { success, data, message }
+    const { access_token, user: userData } = response.data.data;
     
-    localStorage.setItem('token', accessToken);
+    localStorage.setItem('token', access_token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     
