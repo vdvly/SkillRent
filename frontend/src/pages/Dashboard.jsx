@@ -53,7 +53,7 @@ export function Dashboard() {
           </Link>
         </h2>
         <div className="grid grid-3">
-          {console.log(services.data)}
+          
           {services.data.map((service) => (
             <div key={service.id} className="card">
               <h3>{service.title}</h3>

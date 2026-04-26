@@ -9,7 +9,7 @@ async function bootstrap() {
 
   // Enable CORS
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://0.0.0.0:5173',
+    origin: process.env.FRONTEND_URL || 'http://10.26.154.129:5173',
     credentials: true,
   });
 
