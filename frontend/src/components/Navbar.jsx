@@ -35,25 +35,32 @@ export function Navbar() {
 
         <div style={{
           display: 'flex',
-          gap: '2rem',
+          gap: '1rem',
           alignItems: 'center',
+          flexWrap: 'wrap',
         }}>
+          {/* Navigation for all users */}
+          <Link to="/explore" style={{ fontSize: '14px' }}>🔍 Explore</Link>
+          <Link to="/recommendations" style={{ fontSize: '14px' }}>✨ Trending</Link>
+
           {user ? (
             <>
-              <Link to="/services">Services</Link>
-              <Link to="/requests">Requests</Link>
-              <Link to="/messages">Messages</Link>
-              <Link to="/profile">Profile</Link>
+              <Link to="/services" style={{ fontSize: '14px' }}>Services</Link>
+              <Link to="/requests" style={{ fontSize: '14px' }}>Requests</Link>
+              <Link to="/messages" style={{ fontSize: '14px' }}>💬 Messages</Link>
+              <Link to="/activity" style={{ fontSize: '14px' }}>📊 Activity</Link>
+              <Link to="/payments" style={{ fontSize: '14px' }}>💳 Payments</Link>
+              <Link to="/profile" style={{ fontSize: '14px' }}>👤 Profile</Link>
               <button onClick={handleLogout} className="btn btn-secondary btn-sm">
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-primary">
+              <Link to="/login" className="btn btn-primary btn-sm">
                 Login
               </Link>
-              <Link to="/register" className="btn btn-secondary">
+              <Link to="/register" className="btn btn-secondary btn-sm">
                 Register
               </Link>
             </>

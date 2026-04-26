@@ -156,7 +156,7 @@ model Review {
   @@index([createdAt])
 }
 
-// Future extension: Payments (not implemented in MVP)
+// Payments system
 model Payment {
   id          String    @id @default(cuid())
   amount      Float
@@ -164,9 +164,26 @@ model Payment {
   status      String    @default("pending") // pending, completed, failed
   userId      String
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  serviceId   String?   // Optional: which service this payment is for
+  description String?   // Payment description
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   @@index([userId])
   @@index([status])
+  @@index([createdAt])
+}
+
+// Activity log system
+model Activity {
+  id          String    @id @default(cuid())
+  userId      String
+  action      String    // created_service, sent_message, posted_request, left_review, made_payment, etc.
+  description String?   // Additional context
+  resourceId  String?   // ID of the resource (serviceId, messageId, etc.)
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
 }

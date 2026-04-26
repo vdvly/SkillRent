@@ -28,6 +28,19 @@ export class UsersController {
     return this.usersService.getPublicProfile(id);
   }
 
+  @Get(':id/reputation')
+  async getUserReputation(@Param('id') id: string) {
+    const reviews = await this.usersService.getUserReviews(id);
+    const averageRating = await this.usersService.calculateReputationScore(id);
+    
+    return {
+      userId: id,
+      averageRating,
+      totalReviews: reviews.length,
+      reviews,
+    };
+  }
+
   @Get(':id/services')
   async getUserServices(
     @Param('id') id: string,
@@ -62,3 +75,4 @@ export class UsersController {
     return this.usersService.updateProfile(req.user.id, data);
   }
 }
+

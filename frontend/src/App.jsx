@@ -14,6 +14,11 @@ import { Requests } from './pages/Requests';
 import { CreateRequest } from './pages/CreateRequest';
 import { Messages } from './pages/Messages';
 import { Profile } from './pages/Profile';
+import Explore from './pages/Explore';
+import RecommendationsPage from './pages/RecommendationsPage';
+import UserProfile from './pages/UserProfile';
+import Activity from './pages/Activity';
+import Payments from './pages/Payments';
 
 function App() {
   return (
@@ -23,6 +28,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* Advanced Features - Accessible to all */}
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/recommendations" element={<RecommendationsPage />} />
+          <Route path="/activity" element={<Activity />} />
+          <Route path="/users/:userId" element={<UserProfile />} />
 
           <Route
             path="/"
@@ -83,6 +94,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/payments"
+            element={
+              <ProtectedRoute>
+                <Payments />
               </ProtectedRoute>
             }
           />

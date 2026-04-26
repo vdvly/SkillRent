@@ -6,6 +6,10 @@ import { ServicesModule } from './services/services.module';
 import { RequestsModule } from './requests/requests.module';
 import { MessagesModule } from './messages/messages.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { SearchModule } from './search/search.module';
+import { RecommendationsModule } from './recommendations/recommendations.module';
+import { ActivityModule } from './activity/activity.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -19,6 +23,10 @@ import { ReviewsModule } from './reviews/reviews.module';
     RequestsModule,
     MessagesModule,
     ReviewsModule,
+    SearchModule,
+    RecommendationsModule,
+    ActivityModule,
+    PaymentsModule,
   ],
 })
 export class AppModule {}

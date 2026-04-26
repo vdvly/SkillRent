@@ -24,7 +24,6 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "incremental": true,
-    "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
